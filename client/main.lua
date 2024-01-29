@@ -80,36 +80,44 @@ function StopRentalCountdown()
 end
 
 RegisterNetEvent("qb-rentals:client:menu", function()
-    exports['qb-menu']:openMenu({
-    {
-        isMenuHeader = true,
-        header = 'Rentals Menu'
-    },
-    {
-        header = 'Rent Vehicle',
-        txt = "Rent a vehicle",
-        icon = "fas fa-car",
-        params = {
-            event = 'qb-rentals:ui:client:open'
+  lib.showContext('event_menu')    local displayChoices = {
+        id = 'choice_menu',
+        title = 'Rental Menu',
+        menu = 'rental_menu',
+        options = {
+            {
+                title = 'Switch Job',
+                description = 'Switch your job to: '..args.jobLabel,
+                icon = 'fa-solid fa-circle-check',
+                event = 'qb-rentals:ui:client:open',
+            },
+            {
+                title = 'Delete Job',
+                description = 'Delete the selected job: '..args.jobLabel,
+                icon = 'fa-solid fa-trash-can',
+                event = 'qb-rentals:client:returnvehicle',
+            },
+	    {
+                title = 'Close',
+                description = 'Close the Menu',
+                icon = 'fa-solid fa-trash-can',
+                event = 'qb-rentals:client:closeMenu',
+            },
         }
-    },
-    {
-        header = 'Return Vehicle',
-        txt = "Return the rental vehicle",
-        icon = "fas fa-check",
-        params = {
-            event = 'qb-rentals:client:returnvehicle'
-        }
-    },
-    {
-      header = "Close Menu",
-      icon = "fas fa-left-long",
-      params = {
-      event = "qb-menu:client:closeMenu",
-      },
-  },
-  })
+    }
+    lib.registerContext(displayChoices)
+    lib.showContext('choice_menu')
 end)
+
+RegisterNetEvent('qb-rentals:client:closeMenu', function()
+    closeMenu()
+end)
+
+local function closeMenu()
+    sendData = nil
+    headerShown = false
+    lib.hideContext()
+end
 
 RegisterNetEvent("qb-rentals:client:returnvehicle", function()
     local veh = GetPlayersLastVehicle(PlayerPedId())
