@@ -13,7 +13,10 @@ escrow_ignore {
     'client/main.lua',
     'server/main.lua'
 }
-shared_script 'config.lua'
+shared_scripts {
+ '@ox_lib/init.lua', -- Comment if not needed
+ 'config.lua',
+}
 
 server_scripts {
     'server/main.lua'
