@@ -37,7 +37,7 @@ end
 	while true do
 		Citizen.Wait(1000)
 
-			local pos = GetEntityCoords(PlayerPedId())	
+			local pos = GetEntityCoords(cache.ped)	
 			local dist = #(pos - vector3(Config.PedLocation.x, Config.PedLocation.y, Config.PedLocation.z))
 			
 			if dist < 60 and not pedspawned then
@@ -120,12 +120,12 @@ local function closeMenu()
 end
 
 RegisterNetEvent("qb-rentals:client:returnvehicle", function()
-    local veh = GetPlayersLastVehicle(PlayerPedId())
+    local veh = GetPlayersLastVehicle(cache.ped)
     if Renting then
 
         if veh == rentVehicle then
 
-            distance = #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(veh))
+            distance = #(GetEntityCoords(cache.ped) - GetEntityCoords(veh))
               if distance <= 5 then
 
             rentVehicle = 0
@@ -187,7 +187,7 @@ local function doAnimation()
     RequestModel(tabletProp)
     while not HasModelLoaded(tabletProp) do Citizen.Wait(100) end
 
-    local plyPed = PlayerPedId()
+    local plyPed = cache.ped
     local tabletObj = CreateObject(tabletProp, 0.0, 0.0, 0.0, true, true, false)
     local tabletBoneIndex = GetPedBoneIndex(plyPed, tabletBone)
 
@@ -203,7 +203,7 @@ local function doAnimation()
         end
 
         for k, v in pairs(GetGamePool('CObject')) do
-            if IsEntityAttachedToEntity(PlayerPedId(), v) then
+            if IsEntityAttachedToEntity(cache.ped, v) then
                 SetEntityAsMissionEntity(v, true, true)
                 DeleteObject(v)
                 DeleteEntity(v)
@@ -295,7 +295,7 @@ RegisterNetEvent('qb-rentals:client:rentvehiclespawn', function(vehicle, time)
     QBCore.Functions.Notify(Config.Notify.rented)
     QBCore.Functions.TriggerCallback('QBCore:Server:SpawnVehicle', function(netId)
         local veh = NetToVeh(netId)
-        -- TaskWarpPedIntoVehicle(PlayerPedId(), veh, -1)
+        -- TaskWarpPedIntoVehicle(cache.ped, veh, -1)
         exports['LegacyFuel']:SetFuel(veh, 100)
         SetVehicleNumberPlateText(veh, "Rentals")
         SetEntityHeading(veh, Config.VehicleLocation.w)
